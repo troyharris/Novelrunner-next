@@ -2,13 +2,12 @@ import { notFound } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
 
-interface ProjectPageProps {
-  params: {
-    projectId: string;
-  };
-}
+type Props = {
+  params: Promise<{ projectId: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
 
-export default async function ProjectPage({ params }: ProjectPageProps) {
+export default async function ProjectPage({ params }: Props) {
   const { projectId } = await params;
   const supabase = await createClient();
 
