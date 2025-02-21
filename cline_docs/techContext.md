@@ -23,7 +23,7 @@
      - Authentication
      - Real-time subscriptions
      - File storage
-   - OpenRouter for AI integration
+   - OpenRouter for AI integration (pending)
 
 4. **Development Tools**
    - Node.js (Latest LTS)
@@ -130,6 +130,80 @@
 
 ### 1. Supabase
 
+#### Database Schema
+
+Current tables and relationships:
+
+```sql
+-- Projects table
+CREATE TABLE projects (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  title TEXT NOT NULL,
+  genre TEXT NOT NULL,
+  target_word_count INTEGER NOT NULL,
+  pace TEXT NOT NULL,
+  cover_color TEXT,
+  episode_count INTEGER,
+  words_written INTEGER DEFAULT 0,
+  user_id UUID REFERENCES auth.users(id),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
+);
+
+-- Episodes table
+CREATE TABLE episodes (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  project_id UUID REFERENCES projects(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  target_word_count INTEGER NOT NULL,
+  current_word_count INTEGER DEFAULT 0,
+  status TEXT DEFAULT 'draft',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
+);
+
+-- Scenes table (planned)
+CREATE TABLE scenes (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  episode_id UUID REFERENCES episodes(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  content TEXT,
+  word_count INTEGER DEFAULT 0,
+  status TEXT DEFAULT 'draft',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
+);
+```
+
+#### Security Policies
+
+```sql
+-- Projects RLS
+ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can create their own projects"
+ON projects FOR INSERT
+TO authenticated
+WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can view their own projects"
+ON projects FOR SELECT
+TO authenticated
+USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can update their own projects"
+ON projects FOR UPDATE
+TO authenticated
+USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete their own projects"
+ON projects FOR DELETE
+TO authenticated
+USING (auth.uid() = user_id);
+
+-- Similar policies for episodes and scenes
+```
+
 #### Production Environment
 
 - PostgreSQL database
@@ -162,20 +236,46 @@
   npm run db:types    # Generate TypeScript types
   ```
 
-#### Environment Configuration
+### 2. Authentication
 
-- `.env.local` - Production settings
-- `.env.development.local` - Local development settings
-- Automatic switching between environments
+#### Implementation
 
-### 2. OpenRouter
+```typescript
+// src/lib/supabase/server.ts
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+
+export const createClient = (cookies: any) => {
+  return createServerComponentClient({
+    cookies,
+  });
+};
+
+// src/middleware.ts
+import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
+
+export async function middleware(req: NextRequest) {
+  const res = NextResponse.next();
+  const supabase = createMiddlewareClient({ req, res });
+  await supabase.auth.getSession();
+  return res;
+}
+```
+
+#### Protected Routes
+
+- Middleware checks for authentication
+- Server-side session validation
+- Client-side auth state management
+- Secure redirect handling
+
+### 3. OpenRouter (Planned)
 
 - AI model access
 - API key required
 - Rate limiting considerations
 - Multiple model support
 
-### 3. Vercel
+### 4. Vercel
 
 - Production hosting
 - Automatic deployments
@@ -212,18 +312,21 @@
    - Supabase handles user sessions
    - Protected API routes
    - Middleware for route protection
+   - Secure session management
 
 2. **Database Security**
 
    - Row Level Security (RLS)
    - Prepared statements
    - Input validation
+   - User-specific policies
 
 3. **API Security**
 
    - Rate limiting
    - CORS configuration
    - API key management
+   - Request validation
 
 4. **Environment Variables**
    - Stored in Vercel
@@ -237,17 +340,20 @@
    - Code splitting
    - Tree shaking
    - Image optimization
+   - Route prefetching
 
 2. **Runtime Optimization**
 
    - Server components
    - Edge functions where applicable
    - Caching strategies
+   - Optimistic updates
 
 3. **Database Optimization**
    - Indexed queries
    - Connection pooling
    - Query optimization
+   - Efficient joins
 
 ## Monitoring and Debugging
 
@@ -256,14 +362,17 @@
    - Client-side error boundaries
    - Server-side error logging
    - API error handling
+   - Custom error pages
 
 2. **Performance Monitoring**
 
    - Vercel Analytics
    - Custom performance metrics
    - User behavior tracking
+   - API response times
 
 3. **Logging**
    - Development logs
    - Production error tracking
    - Security audit logs
+   - Database query logs

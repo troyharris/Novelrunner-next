@@ -45,7 +45,7 @@ export default function AuthProvider({
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [supabase.auth]);
 
   return (
     <AuthContext.Provider value={{ user, loading }}>
