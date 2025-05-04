@@ -14,16 +14,20 @@
     "db:studio": "supabase studio"
   },
   "dependencies": {
+    "@fontsource/crimson-text": "^5.2.0",
     "@headlessui/react": "^2.2.0",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.48.1",
     "clsx": "^2.1.1",
+    "framer-motion": "^12.9.4",
+    "lucide-react": "^0.507.0",
     "next": "15.1.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@tailwindcss/typography": "^0.5.16",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

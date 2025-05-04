@@ -1,4 +1,6 @@
 import type { Config } from "tailwindcss";
+import typography from "@tailwindcss/typography";
+import type { PluginAPI } from "tailwindcss/types/config";
 
 export default {
   darkMode: "class",
@@ -27,5 +29,21 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    typography,
+    function ({ addUtilities }: PluginAPI) {
+      addUtilities({
+        ".scrollbar-hide": {
+          /* Firefox */
+          "scrollbar-width": "none",
+          /* IE and Edge */
+          "-ms-overflow-style": "none",
+          /* Chrome, Safari, Opera */
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
+        },
+      });
+    },
+  ],
 } satisfies Config;

@@ -13,6 +13,9 @@
    - Authentication system implemented
    - Database schema and migrations
    - API routes for core functionality
+   - Scene management API endpoints
+   - Scene enhancement schema (types, characters, synopsis)
+   - **Project View UI/UX Overhaul (`ProjectContent.tsx`)**: Implemented new layout with sidebar, top bar, and animated chapter/scene column.
 
 2. **Authentication**
 
@@ -40,14 +43,26 @@
    - Episode tracking
    - Words written metrics
    - Security policies
+   - Character management system
+   - Scene types categorization
+   - Scene-specific synopsis
+   - Many-to-many relationships
 
 ### In Progress 🚧
 
-1. **Writing Interface**
+1. **Writing Interface Features**
 
-   - [ ] Scene editor implementation
-   - [ ] Real-time word count
-   - [ ] Auto-save functionality
+   - [✓] Scene sequence management
+   - [✓] Scene creation and ordering
+   - [✓] Drag-and-drop scene reordering
+   - [✓] Optimistic UI updates
+   - [✓] Scene types and character schema
+   - [✓] Scene editor integration (Basic container and existing editor component placed in new UI)
+   - [ ] Scene types UI integration (within new UI)
+   - [ ] Character management UI (within new UI)
+   - [ ] Scene synopsis UI (within new UI)
+   - [ ] Real-time word count (Refinement needed)
+   - [ ] Auto-save functionality (Refinement/verification needed)
    - [ ] Draft management
 
 2. **AI Integration**
@@ -96,25 +111,27 @@
 
 1. **Technical Debt**
 
-   - Need comprehensive test coverage
-   - Performance optimization for real-time features
+   - Need comprehensive test coverage (especially for new UI interactions)
+   - Performance optimization for real-time features and animations
    - Error handling improvements
-   - Loading state management
+   - Loading state management (verify in new UI)
+   - Scene content persistence implementation needed
 
 2. **UX Improvements**
+   - Verify and refine new `ProjectContent.tsx` UI/UX.
+   - Implement placeholder views for sidebar navigation items (Characters, World Building, etc.).
    - Project dashboard refinement
-   - Writing interface polish
-   - Progress visualization
-   - Settings management
+   - Writing interface polish (within new UI)
+   - Progress visualization (beyond top bar)
+   - Settings management implementation
 
 ### Upcoming Milestones 🎯
 
-1. **Writing Interface Release**
+1. **Project View UI Stabilization**
 
-   - Complete scene editor
-   - Word count tracking
-   - Auto-save system
-   - Basic AI integration
+   - Verify functionality and visuals of `ProjectContent.tsx`.
+   - Implement basic placeholder views for all navigation items.
+   - Address any immediate bugs or UX issues found during verification.
 
 2. **AI Features Release**
 
@@ -177,15 +194,14 @@
 
 1. **Immediate**
 
-   - Implement scene editor
-   - Set up AI integration
-   - Add research notes system
+   - Verify `ProjectContent.tsx` functionality (layout, navigation, chapter/scene switching, editor). Use browser tool if necessary.
+   - Implement basic placeholder components for Characters, World Building, Outline, AI Assistant, and Settings views.
 
 2. **Short-term**
 
-   - Build export functionality
-   - Add collaboration features
-   - Enhance progress tracking
+   - Address any issues found during UI verification.
+   - Begin implementing UI for scene types, characters, and synopsis within the new structure.
+   - Continue AI integration planning/implementation.
 
 3. **Medium-term**
    - Implement advanced AI features
@@ -195,6 +211,7 @@
 ## Notes
 
 - Core authentication and project management complete
-- Moving to writing interface implementation
-- AI integration planning underway
-- Focus on user experience and performance
+- Project View UI (`ProjectContent.tsx`) refactored.
+- Next steps involve verifying the new UI, adding placeholders, and continuing feature implementation within the new structure.
+- Focus on clean, distraction-free writing experience within the updated interface.
+- AI integration planning underway.
